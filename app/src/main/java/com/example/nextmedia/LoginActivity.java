@@ -20,12 +20,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        EditEmail = findViewById(R.id.admin_email);
-        Editpassword = findViewById(R.id.admin_login_password);
-        LoginBtn = findViewById(R.id.login_btn);
-        UsePhoneBtn = findViewById(R.id.login_phone_btn);
-        NeedNewAccount = findViewById(R.id.need_new_account);
-        ForgetPassword = findViewById(R.id.forget_password_link);
+
+        initializeFields();
 
         UsePhoneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,10 +30,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        NeedNewAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendUserToRegisterActivity();
+            }
+        });
+
+    }
+
+
+    private void initializeFields(){
+        EditEmail = findViewById(R.id.admin_email);
+        Editpassword = findViewById(R.id.admin_login_password);
+        LoginBtn = findViewById(R.id.login_btn);
+        UsePhoneBtn = findViewById(R.id.login_phone_btn);
+        NeedNewAccount = findViewById(R.id.need_new_account);
+        ForgetPassword = findViewById(R.id.forget_password_link);
     }
 
     private void SendUserToPhoneLoginActivity() {
         Intent phoneLoginIntent = new Intent(LoginActivity.this,PhoneRegistrationActivity.class);
         startActivity(phoneLoginIntent);
+    }
+    private void SendUserToRegisterActivity() {
+        Intent registerIntent = new Intent(LoginActivity.this,RegisterActivity.class);
+        startActivity(registerIntent);
     }
 }

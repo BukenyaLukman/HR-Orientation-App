@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context=".RegisterActivity"
+    android:background="@drawable/nextmedia_image">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/admin_register_toolbar"
@@ -20,12 +21,13 @@
         android:layout_height="wrap_content"
         android:hint="Email..."
         android:drawableLeft="@drawable/email"
+        android:textColor="@android:color/black"
         android:drawableTint="@android:color/black"
-        android:textColorHint="@android:color/black"
-        android:layout_below="@+id/hr_word"
+        android:textColorHint="@color/colorAccent"
+        android:layout_below="@+id/admin_register_toolbar"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="10dp"
         android:padding="15dp"
         android:background="@drawable/input_design"
         android:textSize="20sp"/>
@@ -35,7 +37,8 @@
         android:layout_height="wrap_content"
         android:hint="password"
         android:inputType="textPassword"
-        android:textColorHint="@android:color/black"
+        android:textColor="@android:color/black"
+        android:textColorHint="@color/colorAccent"
         android:layout_below="@+id/admin_register_email"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -45,46 +48,50 @@
         android:drawableTint="@android:color/black"
         android:background="@drawable/input_design"
         android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/register_btn"
+        android:background="@color/colorAccentExtra"
+        android:layout_below="@+id/admin_register_password"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="180dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Account"
+        android:textSize="19dp"
+        android:textAllCaps="false"
+        android:padding="18dp"/>
+
+
     <TextView
         android:id="@+id/already_have_account_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:text="Already Have Account? Login"
-        android:layout_below="@+id/admin_register_password"
-        android:textColor="@android:color/holo_red_dark"
+        android:layout_below="@+id/register_btn"
+        android:textColor="@color/colorAccentExtra"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="20dp"
         android:textSize="23sp"
         android:textStyle="bold"/>
 
+
     <Button
-        android:id="@+id/register_btn"
-        android:background="@color/colorAccentExtra"
-        android:layout_below="@+id/already_have_account_link"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold|italic"
+        android:id="@+id/admin_option_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Account"
-        android:textSize="20sp"
-        android:textAllCaps="true"
-        android:padding="20dp"/>
-
-    <TextView
-        android:id="@+id/admin_option_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="Or Register Using Phone ?"
-        android:layout_below="@+id/register_btn"
-        android:textColor="@android:color/holo_red_dark"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="20dp"
-        android:textSize="23sp"
-        android:textStyle="bold|italic"/>
+        android:layout_alignParentBottom="true"
+        android:text="Register Using Phone"
+        android:drawableLeft="@drawable/phone"
+        android:layout_marginBottom="20dp"
+        android:textColor="@android:color/white"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textSize="19sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

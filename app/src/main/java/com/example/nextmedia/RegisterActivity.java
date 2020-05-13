@@ -1,21 +1,33 @@
 package com.example.nextmedia;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText EmailTextField,PasswordTextField;
-    private Button CreateAccountBtn;
-    private TextView AlreadyHaveAccount,RegisterWithPhone;
+    private Button CreateAccountBtn,RegisterWithPhone;
+    private TextView AlreadyHaveAccount;
+
+
+    private FirebaseAuth mAuth;
+    private ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,33 +35,78 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_register_activity);
 
-        EmailTextField = findViewById(R.id.admin_register_email);
-        PasswordTextField = findViewById(R.id.admin_register_password);
-        AlreadyHaveAccount = findViewById(R.id.already_have_account_link);
-        CreateAccountBtn = findViewById(R.id.register_btn);
-        RegisterWithPhone = findViewById(R.id.admin_option_phone);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        initializeFields();
 
         AlreadyHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendAdminToLoginActivity();
+                SendUserToLoginActivity();
             }
         });
 
         RegisterWithPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendAdminToPhoneRegisterActivity();
+                SendUserToPhoneRegisterActivity();
+            }
+        });
+
+        CreateAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateNewAccount();
             }
         });
     }
+    private void initializeFields(){
+        EmailTextField = findViewById(R.id.admin_register_email);
+        PasswordTextField = findViewById(R.id.admin_register_password);
+        AlreadyHaveAccount = findViewById(R.id.already_have_account_link);
+        CreateAccountBtn = findViewById(R.id.register_btn);
+        RegisterWithPhone = findViewById(R.id.admin_option_phone);
+        loadingBar = new ProgressDialog(this);
+    }
 
-    private void SendAdminToPhoneRegisterActivity() {
+    private void CreateNewAccount() {
+        String email = EmailTextField.getText().toString();
+        String password = PasswordTextField.getText().toString();
+
+        if(TextUtils.isEmpty(email)){
+            Toast.makeText(this, "Please Enter an Email...", Toast.LENGTH_SHORT).show();
+        }else if(TextUtils.isEmpty(password)){
+            Toast.makeText(this, "Please Enter an Password...", Toast.LENGTH_SHORT).show();
+        }else{
+            loadingBar.setTitle("Creating Account...");
+            loadingBar.setMessage("Please wait...");
+            loadingBar.setCanceledOnTouchOutside(false);
+            loadingBar.show();
+
+            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        SendUserToLoginActivity();
+                        Toast.makeText(RegisterActivity.this, "Account Created succesfully", Toast.LENGTH_SHORT).show();
+                        loadingBar.dismiss();
+                    }else{
+                        String message = task.getException().toString();
+                        Toast.makeText(RegisterActivity.this, "Error: "+ message, Toast.LENGTH_SHORT).show();
+                        loadingBar.dismiss();
+                    }
+                }
+            });
+        }
+    }
+
+    private void SendUserToPhoneRegisterActivity() {
         Intent loginIntent = new Intent(RegisterActivity.this,PhoneRegistrationActivity.class);
         startActivity(loginIntent);
     }
 
-    private void SendAdminToLoginActivity() {
+    private void SendUserToLoginActivity() {
         Intent loginIntent = new Intent(RegisterActivity.this,LoginActivity.class);
         startActivity(loginIntent);
     }
