@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -27,6 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     private ProgressDialog loadingBar;
 
     @Override
@@ -37,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
         initializeFields();
 
@@ -101,13 +104,32 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(currentUser != null){
+            SendUSerToCategoryActivity();
+        }
+    }
+
+    private void SendUSerToCategoryActivity() {
+        Intent catIntent = new Intent(RegisterActivity.this,CategoryActivity.class);
+        catIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        catIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(catIntent);
+    }
+
     private void SendUserToPhoneRegisterActivity() {
         Intent loginIntent = new Intent(RegisterActivity.this,PhoneRegistrationActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
     }
 
     private void SendUserToLoginActivity() {
         Intent loginIntent = new Intent(RegisterActivity.this,LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
     }
 }

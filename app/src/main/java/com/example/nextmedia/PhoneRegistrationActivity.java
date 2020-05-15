@@ -19,6 +19,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -32,6 +33,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
+    private FirebaseUser currentUser;
 
     private FirebaseAuth mAuth;
 
@@ -42,6 +44,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_phone_registration);
 
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
         PhoneInput = findViewById(R.id.admin_register_phone);
         CodeInput = findViewById(R.id.admin_phone_verification);
@@ -134,6 +137,14 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(currentUser != null){
+            SendUserToMainActivity();
+        }
+    }
+
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -153,6 +164,8 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
 
     private void SendUserToMainActivity() {
         Intent mainIntent = new Intent(PhoneRegistrationActivity.this,CategoryActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
     }

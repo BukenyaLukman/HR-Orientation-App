@@ -20,6 +20,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +44,10 @@ public class CategoryActivity extends AppCompatActivity {
     private Uri ImageUri;
     List<CategoryModel> list;
 
+    private FirebaseUser currentUser;
+
+    private FirebaseAuth mAuth;
+
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private DatabaseReference myRef;
@@ -53,6 +59,9 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category);
 
         myRef = FirebaseDatabase.getInstance().getReference();
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
         toolbar = findViewById(R.id.category_toolbar);
         setSupportActionBar(toolbar);
@@ -87,6 +96,19 @@ public class CategoryActivity extends AppCompatActivity {
                 Toast.makeText(CategoryActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(currentUser == null){
+            SendUserToLoginActivity();
+        }
+    }
+
+    private void SendUserToLoginActivity() {
+        Intent LoginIntent = new Intent(CategoryActivity.this, LoginActivity.class);
+        startActivity(LoginIntent);
     }
 
     @Override
