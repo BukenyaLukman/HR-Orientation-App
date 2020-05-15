@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button startBtn, bookMarkBtn;
+    private Button startBtn, InstructionsBtn;
 
 
     @Override
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bookMarkBtn = findViewById(R.id.bookmark_btn);
+        InstructionsBtn = findViewById(R.id.instructions_btn);
         startBtn = findViewById(R.id.start_btn);
 
         startBtn.setOnClickListener(new View.OnClickListener() {
@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bookMarkBtn.setOnClickListener(new View.OnClickListener() {
+        InstructionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent bookMarkIntent = new Intent(MainActivity.this,BookMarkActivity.class);
-                startActivity(bookMarkIntent);
+                Intent InstructionsIntent = new Intent(MainActivity.this,InstructionsActivity.class);
+                startActivity(InstructionsIntent);
             }
         });
     }

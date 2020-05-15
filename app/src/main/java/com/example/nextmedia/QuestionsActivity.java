@@ -36,16 +36,15 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private DatabaseReference myRef;
 
-    private  static final String FILE_NAME = "TEST";
-    private  static final String KEY_NAME = "QUESTIONS";
+
 
     private Toolbar toolbar;
     private TextView Question,NumberIndicator;
     private FloatingActionButton bookmarkBtn;
     private LinearLayout optionsContainer;
-    private Button ShareBtn,NextBtn;
+    private Button NextBtn;
     private List<QuestionModel> list;
-    private List<QuestionModel> bookmarksList;
+
     private int position = 0;
     private int score = 0;
 
@@ -55,11 +54,9 @@ public class QuestionsActivity extends AppCompatActivity {
     private String category;
     private int setNo;
     private Dialog loadingDialog;
-    private Gson gson;
+
     private  int matchedQuestionPosition;
 
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
 
 
 
@@ -68,9 +65,6 @@ public class QuestionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questions);
 
-        preferences = getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-        editor = preferences.edit();
-        gson = new Gson();
 
 
         myRef = FirebaseDatabase.getInstance().getReference();
@@ -82,10 +76,9 @@ public class QuestionsActivity extends AppCompatActivity {
         NumberIndicator = findViewById(R.id.no_indicator);
         bookmarkBtn = findViewById(R.id.bookmark_btn);
         optionsContainer = findViewById(R.id.options_container);
-        ShareBtn = findViewById(R.id.share_btn);
         NextBtn = findViewById(R.id.next_btn);
 
-        getBookMarks();
+
         category = getIntent().getStringExtra("category");
         setNo = getIntent().getIntExtra("setNo",1);
 
@@ -142,14 +135,7 @@ public class QuestionsActivity extends AppCompatActivity {
         bookmarkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(modeMatch()){
-                    bookmarksList.remove(matchedQuestionPosition);
-                    bookmarkBtn.setImageDrawable(getDrawable(R.drawable.bookmark_border));
 
-                }else{
-                    bookmarksList.add(list.get(position));
-                    bookmarkBtn.setImageDrawable(getDrawable(R.drawable.bookmarks));
-                }
             }
         });
 
@@ -184,13 +170,7 @@ public class QuestionsActivity extends AppCompatActivity {
                     try {
                         ((TextView)view).setText(data);
                         NumberIndicator.setText(position+1+"/"+list.size());
-                        if(modeMatch()){
-                            bookmarksList.remove(matchedQuestionPosition);
-                            bookmarkBtn.setImageDrawable(getDrawable(R.drawable.bookmark_border));
 
-                        }else{
-                            bookmarkBtn.setImageDrawable(getDrawable(R.drawable.bookmarks));
-                        }
                     }catch (ClassCastException ex){
                         ((Button)view).setText(data);
                     }
@@ -210,6 +190,23 @@ public class QuestionsActivity extends AppCompatActivity {
             }
         });
     }
+
+//    private boolean modeMatch(){
+//        boolean matched = false;
+//        int i = 0;
+//
+//        for (QuestionModel model: bookmarksList){
+//
+//            if(model.getQuestion().equals(list.get(position).getQuestion())
+//                    && model.getCorrectAns().equals(list.get(position).getCorrectAns())
+//                    && model.getSetNo() == list.get(position).getSetNo()){
+//                matched = true;
+//                matchedQuestionPosition = i;
+//            }
+//            i++;
+//        }
+//        return matched;
+//    }
 
     private void checkAnswer(Button selectedOption){
         enableOptions(false);
@@ -241,38 +238,12 @@ public class QuestionsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        storedBookmarks();
+
     }
 
-    private void getBookMarks(){
-        String json = preferences.getString(KEY_NAME,"");
-        Type type = new TypeToken<List<QuestionModel>>(){}.getType();
-        bookmarksList = gson.fromJson(json, type);
-        if(bookmarksList == null){
-            bookmarksList = new ArrayList<>();
-        }
-    }
-    private boolean modeMatch(){
-        boolean matched = false;
-        int i = 0;
 
-        for (QuestionModel model: bookmarksList){
 
-            if(model.getQuestion().equals(list.get(position).getQuestion())
-                    && model.getCorrectAns().equals(list.get(position).getCorrectAns())
-                    && model.getSetNo() == list.get(position).getSetNo()){
-                    matched = true;
-                    matchedQuestionPosition = i;
-            }
-            i++;
-        }
-        return matched;
-    }
 
-    private void storedBookmarks(){
-        String json = gson.toJson(bookmarksList);
-        editor.putString(KEY_NAME,json);
-        editor.commit();
-    }
+
 
 }

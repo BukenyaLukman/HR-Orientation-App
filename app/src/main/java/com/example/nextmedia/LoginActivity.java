@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(currentUser != null){
-            SendUserToCategoryActivity();
+            SendUserToMainActivity();
         }
     }
 
@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                    if(task.isSuccessful()){
-                      SendUserToCategoryActivity();
+                      SendUserToMainActivity();
                        Toast.makeText(LoginActivity.this, "Logged in Successfully..", Toast.LENGTH_SHORT).show();
                        loadingBar.dismiss();
                    }else{
@@ -100,8 +100,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void SendUserToCategoryActivity() {
-        Intent catIntent = new Intent(LoginActivity.this,CategoryActivity.class);
+    private void SendUserToMainActivity() {
+        Intent catIntent = new Intent(LoginActivity.this,MainActivity.class);
         catIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         catIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(catIntent);
