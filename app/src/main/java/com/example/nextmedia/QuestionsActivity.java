@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -48,14 +49,14 @@ public class QuestionsActivity extends AppCompatActivity {
     private int position = 0;
     private int score = 0;
 
+    private Dialog loadingDialog;
+
     private int count = 0;
 
 
     private String category;
     private int setNo;
-    private Dialog loadingDialog;
 
-    private  int matchedQuestionPosition;
 
 
 
@@ -72,6 +73,8 @@ public class QuestionsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.questions_toolbar);
         setSupportActionBar(toolbar);
 
+        loadingDialog = new Dialog(this);
+
         Question = findViewById(R.id.question);
         NumberIndicator = findViewById(R.id.no_indicator);
         bookmarkBtn = findViewById(R.id.bookmark_btn);
@@ -80,14 +83,22 @@ public class QuestionsActivity extends AppCompatActivity {
 
 
         category = getIntent().getStringExtra("category");
-        setNo = getIntent().getIntExtra("setNo",1);
+        //setNo = getIntent().getIntExtra("setNo",1);
+
+        loadingDialog = new Dialog(this);
+        loadingDialog.setContentView(R.layout.loading);
+        loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corners));
+        loadingDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        loadingDialog.setCancelable(false);
+
+        //question = getIntent().getIntExtra("sets",0),getIntent().getStringExtra("title")
 
         list = new ArrayList<>();
 
 
-
+        loadingDialog.show();
         myRef.child("SETS").child(category).child("questions")
-                .orderByChild("setNo").equalTo(setNo)
+                .orderByChild("setNo")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -103,16 +114,20 @@ public class QuestionsActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+
                             playAnim(Question,0,list.get(position).getQuestion());
                             NextBtn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     NextBtn.setEnabled(false);
                                     NextBtn.setAlpha(0.7f);
-                                    // enableOptions(true);
                                     position++;
                                     if(position == list.size()){
-                                        /// Score Activity
+                                        Intent scoreIntent = new Intent(QuestionsActivity.this,ScoreActivity.class);
+                                        scoreIntent.putExtra("score",score);
+                                        scoreIntent.putExtra("total",list.size());
+                                        startActivity(scoreIntent);
+                                        finish();
                                         return;
                                     }
 
@@ -123,12 +138,16 @@ public class QuestionsActivity extends AppCompatActivity {
                         }else{
                             finish();
                             Toast.makeText(QuestionsActivity.this, "No More Questions", Toast.LENGTH_SHORT).show();
+
                         }
+                        loadingDialog.dismiss();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Toast.makeText(QuestionsActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        loadingDialog.dismiss();
+                        finish();
                     }
                 });
 
@@ -143,6 +162,9 @@ public class QuestionsActivity extends AppCompatActivity {
     }
 
     private void playAnim(final View view, final int value, final String data){
+        for(int i = 0; i < 4; i++){
+            optionsContainer.getChildAt(i).setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#989898")));
+        }
         view.animate().alpha(value).scaleX(value).scaleY(value).setDuration(500).setStartDelay(100)
                 .setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
             @Override
@@ -176,6 +198,8 @@ public class QuestionsActivity extends AppCompatActivity {
                     }
                     view.setTag(data);
                     playAnim(view,1,data);
+                }else{
+                   enableOptions(true);
                 }
             }
 
@@ -190,23 +214,6 @@ public class QuestionsActivity extends AppCompatActivity {
             }
         });
     }
-
-//    private boolean modeMatch(){
-//        boolean matched = false;
-//        int i = 0;
-//
-//        for (QuestionModel model: bookmarksList){
-//
-//            if(model.getQuestion().equals(list.get(position).getQuestion())
-//                    && model.getCorrectAns().equals(list.get(position).getCorrectAns())
-//                    && model.getSetNo() == list.get(position).getSetNo()){
-//                matched = true;
-//                matchedQuestionPosition = i;
-//            }
-//            i++;
-//        }
-//        return matched;
-//    }
 
     private void checkAnswer(Button selectedOption){
         enableOptions(false);
@@ -234,16 +241,6 @@ public class QuestionsActivity extends AppCompatActivity {
             }
         }
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-
-
-
 
 
 }

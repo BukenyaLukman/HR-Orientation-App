@@ -56,9 +56,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Viewho
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent introIntent = new Intent(itemView.getContext(),IntroductionActivity.class);
-                    introIntent.putExtra("title",title);
-                    introIntent.putExtra("sets",sets);
+                    Intent introIntent = new Intent(itemView.getContext(),QuestionsActivity.class);
+                    introIntent.putExtra("category",title);
+                    //introIntent.putExtra("sets",sets);
                     itemView.getContext().startActivity(introIntent);
                 }
             });

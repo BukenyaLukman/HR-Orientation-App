@@ -40,6 +40,7 @@ public class CategoryActivity extends AppCompatActivity {
     private CircleImageView addImage;
     private EditText CategoryName;
     private Button addBtn;
+    private Dialog loadingDialog;
 
     private Uri ImageUri;
     List<CategoryModel> list;
@@ -68,6 +69,12 @@ public class CategoryActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Categories");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        loadingDialog = new Dialog(this);
+        loadingDialog.setContentView(R.layout.loading);
+        loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corners));
+        loadingDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        loadingDialog.setCancelable(false);
+
          // setCategoryDialog();
 
 
@@ -81,7 +88,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         final CategoryAdapter adapter = new CategoryAdapter(list);
         recyclerView.setAdapter(adapter);
-
+        loadingDialog.show();
         myRef.child("Categories").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -89,11 +96,14 @@ public class CategoryActivity extends AppCompatActivity {
                       list.add(dataSnapshot1.getValue(CategoryModel.class));  
                 }
                 adapter.notifyDataSetChanged();
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(CategoryActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                loadingDialog.dismiss();
+                finish();
             }
         });
     }
