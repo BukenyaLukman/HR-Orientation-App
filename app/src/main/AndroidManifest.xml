@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ScoreActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".ScoreActivity" />
         <activity android:name=".InstructionsActivity" />
         <activity android:name=".QuestionsActivity" />
         <activity android:name=".CategoryActivity" />
