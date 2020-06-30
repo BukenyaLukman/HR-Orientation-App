@@ -37,8 +37,6 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private DatabaseReference myRef;
 
-
-
     private Toolbar toolbar;
     private TextView Question,NumberIndicator;
     private FloatingActionButton bookmarkBtn;
@@ -55,7 +53,7 @@ public class QuestionsActivity extends AppCompatActivity {
 
 
     private String category;
-    private int setNo;
+    //private int setNo;
 
 
 
@@ -126,6 +124,7 @@ public class QuestionsActivity extends AppCompatActivity {
                                         Intent scoreIntent = new Intent(QuestionsActivity.this,ScoreActivity.class);
                                         scoreIntent.putExtra("score",score);
                                         scoreIntent.putExtra("total",list.size());
+                                        scoreIntent.putExtra("category",category);
                                         startActivity(scoreIntent);
                                         finish();
                                         return;

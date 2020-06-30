@@ -11,6 +11,7 @@ public class ScoreActivity extends AppCompatActivity {
 
     private TextView Scored, Total;
     private Button doneBtn;
+    private String CategoryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class ScoreActivity extends AppCompatActivity {
 
         Scored.setText(String.valueOf(getIntent().getIntExtra("score",0)));
         Total.setText("OUT OF "+ String.valueOf(getIntent().getIntExtra("total",0)));
+        CategoryName = getIntent().getStringExtra("category");
 
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
