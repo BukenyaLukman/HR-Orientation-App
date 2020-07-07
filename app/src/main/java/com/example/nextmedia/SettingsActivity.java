@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private StorageReference userProfileImageRef;
     private DatabaseReference userRef;
-
+    private Dialog loadingDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         userProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
+
+        loadingDialog = new Dialog(this);
+        loadingDialog.setContentView(R.layout.loading);
+        loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corners));
+        loadingDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        loadingDialog.setCancelable(false);
+
 
         mToolbar = findViewById(R.id.settings_toolbar);
         setSupportActionBar(mToolbar);
@@ -210,6 +219,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void retrieveUserInfo(){
+        loadingDialog.show();
         userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -222,16 +232,22 @@ public class SettingsActivity extends AppCompatActivity {
                             FullName.setText(nameBb);
                             Department.setText(department);
                             Picasso.get().load(imageDb).placeholder(R.drawable.profile_image).into(ProfileImage);
+                            loadingDialog.dismiss();
+
                             GoToTest.setVisibility(View.VISIBLE);
                             GoToTest.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+
                                     Intent goToTest = new Intent(SettingsActivity.this, CategoryActivity.class);
                                     startActivity(goToTest);
                                     finish();
+
                                 }
                             });
 
+                        }else{
+                            loadingDialog.dismiss();
                         }
                     }
 

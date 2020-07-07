@@ -15,8 +15,8 @@
         >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/candidate_profile_image"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_margin="16dp"
             app:civ_border_color="@android:color/darker_gray"
             android:src="@drawable/profile_image"
@@ -28,16 +28,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
+
             <TextView
                 android:id="@+id/candidate_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Candidate Name"
-                android:layout_marginTop="40dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
                 android:layout_marginStart="4dp"
-                android:textColor="@android:color/black"/>
+                android:layout_marginTop="40dp"
+                android:text="Candidate Name"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
